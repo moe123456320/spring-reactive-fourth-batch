@@ -3,8 +3,11 @@ package com.reactiveexample.demo.service;
 import com.reactiveexample.demo.dto.MovieDto;
 import com.reactiveexample.demo.model.Movie;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface MovieService {
 
 	public Flux<MovieDto> findAllMovie();
+//	public Mono<MovieDto> saveMovie(MovieDto movieDto);
+	public Mono<Movie> saveMovie(MovieDto movieDto);
 }
