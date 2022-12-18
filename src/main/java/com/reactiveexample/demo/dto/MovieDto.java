@@ -43,6 +43,10 @@ public class MovieDto extends BaseDto {
 
 	
     MovieDetail details;
+    
+    
+    
+    
 
 
 	public String getName() {

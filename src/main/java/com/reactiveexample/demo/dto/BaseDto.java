@@ -25,7 +25,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class BaseDto{		
 	 
-	//@Id
+		@Id
 	 private String id;	
 	 
 	 
@@ -34,6 +34,9 @@ public class BaseDto{
 	 
 	 private  Date updated_at;
 
+	 
+	 
+	 
 
 	public void setId(String id) {
 		this.id = id;

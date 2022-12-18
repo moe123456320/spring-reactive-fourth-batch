@@ -25,7 +25,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class BaseDocument{
 	 
-	 //@Id
+	 @Id
 	 private String id;
 
 	
@@ -36,6 +36,8 @@ public class BaseDocument{
 	 private  Date updated_at;
 
 
+	 
+	 
 
 	public String getId() {
 		return id;

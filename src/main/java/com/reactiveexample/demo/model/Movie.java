@@ -36,6 +36,8 @@ public class Movie extends BaseDocument {
 	    private List<Actor> actors;
 		@DBRef
 	    MovieDetail details;
+		
+		
 		public String getName() {
 			return name;
 		}

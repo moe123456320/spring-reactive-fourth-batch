@@ -8,6 +8,7 @@ import reactor.core.publisher.Mono;
 public interface MovieService {
 
 	public Flux<MovieDto> findAllMovie();
-//	public Mono<MovieDto> saveMovie(MovieDto movieDto);
-	public Mono<Movie> saveMovie(MovieDto movieDto);
+	public Mono<MovieDto> saveMovie(MovieDto movieDto);
+	public Mono<MovieDto> findOneMovie(String id);
+	
 }
