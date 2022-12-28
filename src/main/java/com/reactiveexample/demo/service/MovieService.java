@@ -10,5 +10,5 @@ public interface MovieService {
 	public Flux<MovieDto> findAllMovie();
 	public Mono<MovieDto> saveMovie(MovieDto movieDto);
 	public Mono<MovieDto> findOneMovie(String id);
-	
+	public Mono<MovieDto> editMovie(MovieDto movieDto,String id);	
 }

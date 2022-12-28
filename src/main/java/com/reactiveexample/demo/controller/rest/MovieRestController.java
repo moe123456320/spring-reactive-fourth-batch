@@ -4,14 +4,20 @@ import com.reactiveexample.demo.model.Movie;
 import com.reactiveexample.demo.repository.MovieRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.reactiveexample.demo.dto.MovieDto;
@@ -67,6 +73,28 @@ public class MovieRestController {
 
 	
 	
+	@GetMapping("/name")
+	public Flux<Movie> getMovieByName(@RequestParam String movieName){
+		System.out.println("Movie name :"+movieName);
+		
+		Movie movie=new Movie();
+		movie.setName(movieName);
+		
+		//ExampleMatcher matcher=ExampleMatcher.matchingAny();
+		Example<Movie>  example=Example.of(movie);
+		
+		return movieDao.findAll(example);		
+	}
+	
+	@GetMapping("/director")
+	public Flux<Movie> getMovieByDirector(@RequestParam String director){
+		
+			log.info(" \n Movie Director  : "+director);
+			//return movieDao.findByDirector(director);
+			return movieDao.findByDirectorUsingCustomQuery(director);
+	}
+	
+	/**********************************************************************/
 	@PostMapping
 	public Mono<MovieDto> createMovie(@Valid @RequestBody MovieDto movieDto){
 		log.info("Reactive Save Movie");
@@ -76,8 +104,7 @@ public class MovieRestController {
 	
 	
 	
-	//အောက်ကကောင်က MovieRepository ကို တိုက်ရိုက်ခေါ်သုံးထားတာ
-	
+	//အောက်ကကောင်က MovieRepository ကို တိုက်ရိုက်ခေါ်သုံးထားတာ	
 	/*@PostMapping
 	public Mono<Movie> createMovie(@Valid @RequestBody Movie movie){
 		
@@ -87,6 +114,52 @@ public class MovieRestController {
 	}
 	*/
 	
+	@PutMapping("/{id}")
+    public Mono<ResponseEntity<MovieDto>> updateMovie(@PathVariable(value = "id") String movieId,
+                                                   @Valid @RequestBody MovieDto movieDto) {
+		
+		return movieservice.editMovie(movieDto, movieId)
+                .map(updatedMovie -> new ResponseEntity<>(updatedMovie, HttpStatus.OK))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                
+    }
 	
 	
+//အောက်ကကောင်က MovieRepository ကို တိုက်ရိုက်ခေါ်သုံးထားတာ	
+/*	@PutMapping("/{id}")
+    public Mono<ResponseEntity<Movie>> updateMovie(@PathVariable(value = "id") String movieId,
+                                                   @Valid @RequestBody Movie movie) {		
+		return movieDao.findById(movieId)
+                .flatMap(existingMovie -> {
+                    existingMovie.setName(movie.getName());
+                    existingMovie.setDirector(movie.getDirector());
+                    existingMovie.setYear(movie.getYear());
+                    return movieDao.save(existingMovie);
+                })
+                .map(updatedMovie -> new ResponseEntity<>(updatedMovie, HttpStatus.OK))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+*/
+
+/*	
+@DeleteMapping("/{id}")
+public Mono<ResponseEntity<Void>> deleteMovie(@PathVariable(value = "id")String movieId){
+	return movieservice.deleteMovie(movieId)
+			.then(Mono.just(new ResponseEntity<Void>(HttpStatus.OK)))  
+		.defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND)); 
+	
+}
+*/	
+		
+
+	@DeleteMapping("/{id}")
+    public Mono<ResponseEntity<Void>> deleteMovie(@PathVariable(value = "id") String movieId) {
+
+        return movieDao.findById(movieId)
+                .flatMap(existingMovie ->
+                			movieDao.delete(existingMovie)
+                            			   .then(Mono.just(new ResponseEntity<Void>(HttpStatus.OK)))
+                )
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 }
