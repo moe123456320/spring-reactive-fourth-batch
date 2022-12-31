@@ -20,14 +20,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
-
 @Document(collection = "movies")
 @NoArgsConstructor
 @AllArgsConstructor
-//@Data
+@Data
 @ToString
-@EqualsAndHashCode
+//@EqualsAndHashCode
 public class Movie extends BaseDocument {
 	 	
 	    private String name;	    	    
@@ -35,41 +33,5 @@ public class Movie extends BaseDocument {
 	    private String director;	    	    
 	    private List<Actor> actors;
 		@DBRef
-	    MovieDetail details;
-		
-		
-		public String getName() {
-			return name;
-		}
-		public void setName(String name) {
-			this.name = name;
-		}
-		public Integer getYear() {
-			return year;
-		}
-		public void setYear(Integer year) {
-			this.year = year;
-		}
-		public String getDirector() {
-			return director;
-		}
-		public void setDirector(String director) {
-			this.director = director;
-		}
-		public List<Actor> getActors() {
-			return actors;
-		}
-		public void setActors(List<Actor> actors) {
-			this.actors = actors;
-		}
-		public MovieDetail getDetails() {
-			return details;
-		}
-		public void setDetails(MovieDetail details) {
-			this.details = details;
-		}
-		
-	
-		
-		
+	    MovieDetail details;		
 }

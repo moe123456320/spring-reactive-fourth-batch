@@ -1,6 +1,7 @@
 package com.reactiveexample.demo.controller.rest;
 
 import com.reactiveexample.demo.model.Movie;
+import com.reactiveexample.demo.repository.MovieDetailRepository;
 import com.reactiveexample.demo.repository.MovieRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class MovieRestController {
 
 	@Autowired
 	MovieRepository movieDao;
+	
+	@Autowired
+	MovieDetailRepository movieDetailDao;
 	
 	@Autowired
 	MovieService movieservice;	
@@ -107,7 +111,14 @@ public class MovieRestController {
 	//အောက်ကကောင်က MovieRepository ကို တိုက်ရိုက်ခေါ်သုံးထားတာ	
 	/*@PostMapping
 	public Mono<Movie> createMovie(@Valid @RequestBody Movie movie){
-		
+	if(movie.getDetails()!=null) {
+		return this.movieDetailDao.save(movie.getDetails())
+				.flatMap((movieDetails)->{
+					movie.setDetails(movieDetails);
+					return this.movieDao.save(movie);
+					
+				});
+	}
 		log.info("Reactive Save Movie");
 		return movieDao.save(movie);
 		
@@ -154,12 +165,18 @@ public Mono<ResponseEntity<Void>> deleteMovie(@PathVariable(value = "id")String 
 
 	@DeleteMapping("/{id}")
     public Mono<ResponseEntity<Void>> deleteMovie(@PathVariable(value = "id") String movieId) {
-
         return movieDao.findById(movieId)
-                .flatMap(existingMovie ->
-                			movieDao.delete(existingMovie)
-                            			   .then(Mono.just(new ResponseEntity<Void>(HttpStatus.OK)))
-                )
+        		
+                .flatMap(existingMovie ->{                            
+                	if(existingMovie.getDetails()!=null) {
+                		log.info("MovieDetail:"+existingMovie.getDetails());
+                		movieDetailDao.delete(existingMovie.getDetails()).subscribe();
+                	}                	
+                	return	movieDao.delete(existingMovie)                	
+                      .then(Mono.just(new ResponseEntity<Void>(HttpStatus.OK)));
+                	 
+                })
+                
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

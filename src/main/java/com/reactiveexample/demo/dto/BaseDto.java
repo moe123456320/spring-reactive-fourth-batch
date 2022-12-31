@@ -25,7 +25,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class BaseDto{		
 	 
-		@Id
+	//@Id
 	 private String id;	
 	 
 	 

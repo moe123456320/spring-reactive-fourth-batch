@@ -2,6 +2,8 @@ package com.reactiveexample.demo.dto;
 
 import java.util.List;
 
+import org.springframework.data.mongodb.core.mapping.DBRef;
+
 import com.reactiveexample.demo.model.Actor;
 import com.reactiveexample.demo.model.MovieDetail;
 
@@ -20,12 +22,12 @@ import lombok.ToString;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
-//@Data
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@EqualsAndHashCode
+//@EqualsAndHashCode
 public class MovieDto extends BaseDto {
 
 	@NotBlank
@@ -37,69 +39,8 @@ public class MovieDto extends BaseDto {
 
     @NotNull
     private String director;
-    
-    
+        
     private List<Actor> actors;
 
-	
-    MovieDetail details;
-    
-    
-    
-    
-
-
-	public String getName() {
-		return name;
-	}
-
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
-	public Integer getYear() {
-		return year;
-	}
-
-
-	public void setYear(Integer year) {
-		this.year = year;
-	}
-
-
-	public String getDirector() {
-		return director;
-	}
-
-
-	public void setDirector(String director) {
-		this.director = director;
-	}
-
-
-	public List<Actor> getActors() {
-		return actors;
-	}
-
-
-	public void setActors(List<Actor> actors) {
-		this.actors = actors;
-	}
-
-
-	public MovieDetail getDetails() {
-		return details;
-	}
-
-
-	public void setDetails(MovieDetail details) {
-		this.details = details;
-	}
-
-    
-    
-    
-    
+    MovieDetailDto details;
  } 

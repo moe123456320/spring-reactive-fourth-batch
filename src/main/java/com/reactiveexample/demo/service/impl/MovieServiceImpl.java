@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import com.reactiveexample.demo.dto.MovieDetailDto;
 import com.reactiveexample.demo.dto.MovieDto;
 import com.reactiveexample.demo.model.Movie;
+import com.reactiveexample.demo.model.MovieDetail;
+import com.reactiveexample.demo.repository.MovieDetailRepository;
 import com.reactiveexample.demo.repository.MovieRepository;
 
 import reactor.core.Disposable;
@@ -26,6 +28,10 @@ public class MovieServiceImpl implements MovieService{
 	
 	@Autowired
 	MovieRepository movieRepository;
+
+	@Autowired
+	MovieDetailRepository movieDetailRepository;
+	
 	
 	@Autowired
 	ModelMapper modelMapper;
@@ -42,8 +48,16 @@ public class MovieServiceImpl implements MovieService{
 
 		@Override
 		public Mono<MovieDto> saveMovie(MovieDto movieDto) {
-		
 		//asynchronous ( non-blocking io )	
+		if(movieDto.getDetails()!=null) {					
+			 return this.movieDetailRepository.save(modelMapper.map(movieDto.getDetails(),MovieDetail.class))
+					.flatMap((movieDetail)-> {
+						movieDto.setDetails(modelMapper.map(movieDetail,MovieDetailDto.class));
+			return this.movieRepository.save(modelMapper.map(movieDto, Movie.class))
+					.map(movie->modelMapper.map(movie, MovieDto.class));			
+			});		
+		}
+			
 		return movieRepository.save(modelMapper.map(movieDto, Movie.class))
 				.map(movie->modelMapper.map(movie, MovieDto.class));
 			
@@ -75,14 +89,25 @@ public class MovieServiceImpl implements MovieService{
 	@Override
 	public Mono<MovieDto> editMovie(MovieDto movieDto,String id) {
 		
-		return movieRepository.findById(id)
+		return movieRepository.findById(id)//return Movie
 					.flatMap(existingMovie -> {
 						existingMovie.setName(movieDto.getName());
 						existingMovie.setDirector(movieDto.getDirector());
 						existingMovie.setYear(movieDto.getYear());
-						return movieRepository.save(existingMovie); 
-        }).map(movie->modelMapper.map(movie, MovieDto.class));
-	
+					
+					  if(movieDto.getDetails()!=null) {
+					  
+					  return this.movieDetailRepository.save(modelMapper.map(movieDto.getDetails(),MovieDetail.class))
+							  	.flatMap((movieDetail)-> {
+							  			existingMovie.setDetails(movieDetail);			
+							  				return this.movieRepository.save(existingMovie)
+							  							.map(movie->modelMapper.map(movie, MovieDto.class));
+								
+							  		});
+					  	}
+					 			
+						return this.movieRepository.save(existingMovie); 
+        }).map(movie->modelMapper.map(movie, MovieDto.class));	
 	}
-
 }
+
