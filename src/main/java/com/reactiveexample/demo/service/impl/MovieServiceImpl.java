@@ -2,8 +2,6 @@ package com.reactiveexample.demo.service.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -18,7 +16,6 @@ import com.reactiveexample.demo.model.MovieDetail;
 import com.reactiveexample.demo.repository.MovieDetailRepository;
 import com.reactiveexample.demo.repository.MovieRepository;
 
-import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
