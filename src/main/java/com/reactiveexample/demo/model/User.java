@@ -2,7 +2,9 @@ package com.reactiveexample.demo.model;
 
 import java.util.List;
 
-import jakarta.validation.constraints.Size;
+/*import jakarta.validation.constraints.Size;*/
+
+import javax.validation.constraints.Size;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

@@ -20,7 +20,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import jakarta.annotation.PostConstruct;
+
+/*import jakarta.annotation.PostConstruct;*/
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 
 @Component
 public class JwtTokenProvider {
@@ -70,7 +73,7 @@ public class JwtTokenProvider {
   }
 
   
-  public String resolveToken(jakarta.servlet.http.HttpServletRequest req) {
+  public String resolveToken(HttpServletRequest req) {
     String bearerToken = req.getHeader("Authorization");
     if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
       return bearerToken.substring(7);

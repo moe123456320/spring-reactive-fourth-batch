@@ -1,7 +1,11 @@
 package com.reactiveexample.demo.controller.rest;
 
-import jakarta.validation.Valid;
+//import jakarta.validation.Valid;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +22,8 @@ import com.reactiveexample.demo.service.UserService;
 @RestController
 @CrossOrigin
 @Slf4j
+@RequiredArgsConstructor
+@RequestMapping
 public class AuthController {
 	  @Autowired
 	  private UserService userService;

@@ -24,7 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.reactiveexample.demo.dto.MovieDto;
 import com.reactiveexample.demo.service.MovieService;
 
-import jakarta.validation.Valid;
+//import jakarta.validation.Valid;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

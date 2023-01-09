@@ -3,9 +3,14 @@ package com.reactiveexample.demo.model;
 import java.util.Date;
 import java.util.List;
 
-import jakarta.validation.constraints.NotBlank;
+/*import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotNull;
+*/
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

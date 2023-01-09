@@ -7,10 +7,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.reactive.config.CorsRegistry;
 import org.springframework.web.reactive.config.EnableWebFlux;
@@ -18,9 +20,8 @@ import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
-
 @Configuration
-//@EnableWebFlux
+//@EnableWebFluxSecurity
 public class WebSecurityConfig implements WebFluxConfigurer{
 
 @Autowired
@@ -29,8 +30,9 @@ private JwtTokenProvider jwtTokenProvider;
 @Autowired
 private AuthEntryPointJwt unauthorizedHandler;
 
-
-/*  ဒါက  synchronous and blocking I/O မှာသုံးတာ ။ CORS ကို globally configure လုပ်တာ
+/*
+ * ဒါက  synchronous and blocking I/O မှာသုံးတာ ။ CORS ကို globally configure လုပ်တာ
+ 
 @Bean
 public WebMvcConfigurer corsConfigurer() {
     return new WebMvcConfigurer() {
@@ -55,40 +57,41 @@ public void addCorsMappings(CorsRegistry registry) {
 //ဒါက  Spring security configuation နည်းလမ်းအသစ်ပါ
 @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-			 
+		
+	return
   http.cors().and().csrf().disable()
+  		.httpBasic().disable()
       .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
       .and()
       //not storing the Spring Context in the session
       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+      .and()        
+      .apply(new JwtTokenFilterConfigurer(jwtTokenProvider))
       .and()
-      
-      
+      .exceptionHandling().accessDeniedPage("/login")
+      .and()
       //Entry points
   		.authorizeHttpRequests()
   		//.requestMatchers("/consume").permitAll()
-  		.requestMatchers("/login").permitAll()
+  		//.requestMatchers("login").permitAll()
+  		.antMatchers("/login").permitAll()
   		//.requestMatchers("/hello*").permitAll()
   		//.requestMatchers("/ws/echo*").permitAll()
-  		.requestMatchers("/register**").permitAll()
-  		.requestMatchers("/**").permitAll()
-
-  		.anyRequest().authenticated();
+  		//.requestMatchers("/register").permitAll()
+  		.antMatchers("/register").permitAll()
+  		//.requestMatchers("api/movies/**").hasAuthority("ROLE_ADMIN")
   		
-  		
+  		.anyRequest().authenticated()
+  		.and().build();
+  		  		
   		//If a user try to access a resource without having enough permissions
-  		http.exceptionHandling().accessDeniedPage("/login");
+  		//http.exceptionHandling().accessDeniedPage("/login");
 
-  
   		//Apply JWT
-  		http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
-  		
-  	
-  		http.httpBasic();
-  		
-  	return http.build();
+  		//http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
+  		  		  		
+  	//return http.build();
 }
-
 
 @Bean
 public static  PasswordEncoder passwordEncoder() {
@@ -99,5 +102,4 @@ public static  PasswordEncoder passwordEncoder() {
 public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration) throws Exception {
   return authConfiguration.getAuthenticationManager();
 }
-
 }	

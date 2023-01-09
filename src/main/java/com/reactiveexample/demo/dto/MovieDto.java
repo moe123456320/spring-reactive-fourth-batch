@@ -2,14 +2,19 @@ package com.reactiveexample.demo.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import com.reactiveexample.demo.model.Actor;
 import com.reactiveexample.demo.model.MovieDetail;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+//import jakarta.validation.constraints.NotBlank;
+//import jakarta.validation.constraints.NotNull;
+//import jakarta.validation.constraints.Size;
+
 
 //import org.hibernate.validator.constraints.Range;
 
