@@ -73,6 +73,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
       //Entry points
   		.authorizeHttpRequests()
   		//.requestMatchers("/consume").permitAll()
+  		.antMatchers("/api/consume").permitAll()
   		//.requestMatchers("login").permitAll()
   		.antMatchers("/login").permitAll()
   		//.requestMatchers("/hello*").permitAll()
